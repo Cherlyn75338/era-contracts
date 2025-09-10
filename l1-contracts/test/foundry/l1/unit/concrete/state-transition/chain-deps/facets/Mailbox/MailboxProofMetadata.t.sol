@@ -2,7 +2,7 @@
 pragma solidity 0.8.28;
 
 import {MailboxTest} from "./_Mailbox_Shared.t.sol";
-import {IMailbox} from "contracts/state-transition/chain-interfaces/IMailbox.sol";
+import {BridgehubL2TransactionRequest} from "contracts/common/Messaging.sol";
 import {L2Log} from "contracts/common/Messaging.sol";
 import {AddressAliasHelper} from "contracts/vendor/AddressAliasHelper.sol";
 
@@ -34,7 +34,7 @@ contract MailboxProofMetadataTest is MailboxTest {
             txNumberInBatch: 0,
             sender: address(0),
             key: bytes32(0),
-            value: bytes32(0x01)
+            value: bytes32(uint256(1))
         });
 
         vm.expectRevert();
@@ -62,7 +62,7 @@ contract MailboxProofMetadataTest is MailboxTest {
             txNumberInBatch: 0,
             sender: address(0),
             key: bytes32(0),
-            value: bytes32(0x01)
+            value: bytes32(uint256(1))
         });
 
         vm.expectRevert();
@@ -76,7 +76,8 @@ contract MailboxProofMetadataTest is MailboxTest {
 
     function test_GasPerPubdataMismatch_reverts_onBridgehubPath() public {
         // Prepare a request with wrong l2GasPerPubdataByteLimit
-        IMailbox.BridgehubL2TransactionRequest memory req = IMailbox.BridgehubL2TransactionRequest({
+        // Use the struct from Messaging directly via fully qualified name
+        BridgehubL2TransactionRequest memory req = BridgehubL2TransactionRequest({
             sender: address(0xdeadbeef),
             contractL2: address(0xc0ffee),
             mintValue: 0,
